@@ -1,0 +1,54 @@
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<title>書籍検索</title>
+<script language="JavaScript">
+<!--
+ // ［送信］ボタンをクリック時の処理を定義
+function send() {
+   // 非同期通信を行うためのXMLHttpRequestオブジェクトを生成
+  try {
+    xmlReq = new ActiveXObject("Microsoft.XMLHTTP");
+  } catch(e) {
+    xmlReq = new XMLHttpRequest();
+  }
+   // サーバーからの応答時の処理を定義（結果のページへの反映）
+  xmlReq.onreadystatechange = function() {
+    var msg = document.getElementById("result");
+    if (xmlReq.readyState == 4) {
+
+    document.getElementById("status").innerHTML = xmlReq.status;
+
+      if (xmlReq.status == 200 || xmlReq.status == 0) {
+        msg.innerHTML = xmlReq.responseText;
+      } else {
+        msg.innerHTML = "通信に失敗しました。";
+      }
+    } else {
+      msg.innerHTML = "通信中…";
+    }
+  }
+  
+   // サーバーとの通信を開始
+  xmlReq.open("GET","http://localhost:8080/booksearch?word="
+                    + encodeURI(document.fm.isbn.value),true);
+  xmlReq.send(null);
+  document.getElementById("query").innerHTML = "http://localhost:8080/booksearch?word=" + encodeURI(document.fm.isbn.value)
+
+
+}
+//-->
+</script>
+</head>
+<body>
+<form name="fm">
+ISBNコード：
+<input type="text" name="isbn" size="30" />
+<input type="button" value="送信" onclick="send()" />
+
+<div id="query"></div>
+<div id="status"></div>
+<div id="result"></div>
+</form>
+</body>
+</html>
